@@ -35,3 +35,8 @@
     PRINT_ERROR(WRONG_OPTION);\
     printf(" -%c\n", param);\
 }
+
+#define PRINT_FILE(file)\
+{\
+    printf("File `%s` not found\n", file);\
+}

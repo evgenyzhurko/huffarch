@@ -1,5 +1,4 @@
 #include <unistd.h>
-#include <stdio.h>
 
 #include "option.h"
 #include "message.h"

@@ -19,7 +19,7 @@ int handle_params(int argc, char *argv[])
 {
     int c;
     int out_index = 0;
-    int (*function)(char*, char*) = NULL;
+    int (*function)(char *, char *) = NULL;
 
     opterr = 0;
 
