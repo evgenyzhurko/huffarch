@@ -1,12 +1,12 @@
 #include "utils.h"
 
-int file_size(FILE *desc)
+int file_size(FILE *file)
 {
     int size;
 
-    fseek(desc, 0L, SEEK_END);
-    size = ftell(desc);
-    rewind(desc);
+    fseek(file, 0L, SEEK_END);
+    size = ftell(file);
+    rewind(file);
 
     return size;
 }
@@ -15,8 +15,7 @@ FILE* file_open(char *name, char *option)
 {
     FILE *file = fopen(name, option);
 
-    if (file == NULL)
-    {
+    if (file == NULL) {
         PRINT_FILE(name);
         return NULL;
     }

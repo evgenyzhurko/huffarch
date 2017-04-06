@@ -1,3 +1,5 @@
+#pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
+
 #include "option.h"
 
 int check_arguments(int index, int out_index)
