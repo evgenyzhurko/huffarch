@@ -58,7 +58,7 @@ int table_print(struct cell_t *table)
 
     for (i = 0; i < N_ALPHA;  i++) {
         if (table[i].length != 0) {
-            printf("%c - %d - %d - ", table[i].c, table[i].frequency, table[i].length);
+            printf("%d - %d - %d - ", table[i].c, table[i].frequency, table[i].length);
             for (j = 0; j < table[i].length; j++) {
                 printf("%d", table[i].code[j]);
             }

@@ -28,7 +28,7 @@ int extract(char *ifile_name, char *ofile_name)
 
     heap = heap_init(N_ALPHA);
 
-    for (i = 0; i < elements; i++) {
+    for (i = 0; i < ((elements == 0) ? 256 : elements); i++) {
         unsigned char c;
         unsigned int frequency;
 
@@ -71,7 +71,7 @@ int compress(char *ifile_name, char *ofile_name)
     size = file_size(ifile);
 
     if (size == 0) {
-        PRINT_ERROR(FILE_ZERO_SIZE);
+        PRINT_WARNING(FILE_ZERO_SIZE);
         return 1;
     }
 
@@ -102,7 +102,7 @@ int compress(char *ifile_name, char *ofile_name)
     tree = tree_from_heap(heap);
 
     table = table_from_tree(tree);
-
+    
     encode(table, ifile, ofile);
 
     table_delete(table);

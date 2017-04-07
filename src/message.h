@@ -10,11 +10,9 @@
 #define CONTRADICTORY_OPTION "-c and -x is contradictory option,\n\
     \rPlease, use only one of them\n"
 
-#define ZERO_SIZE "size can't be equal to zero\n"
+#define FILE_ZERO_SIZE "input file has a zero size. Output file has the same size.\n"
 
-#define FILE_ZERO_SIZE "input file has a zero size\n"
-
-#define HEAP_ZERO_SIZE "input file has a zero size\n"
+#define HEAP_ZERO_SIZE "heap is a zero size\n"
 
 #define NULL_POINTER "pointer is NULL. "
 
