@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <stdint.h>
 
 #include "heap.h"
 #include "utils.h"

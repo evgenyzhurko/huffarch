@@ -5,7 +5,7 @@
 
 #include "message.h"
 
-#define N 4096
+#define N 2048
 #define N_ALPHA 256
 
 int file_size(FILE *);

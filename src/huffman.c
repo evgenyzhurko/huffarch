@@ -4,8 +4,8 @@
 
 int extract(char *ifile_name, char *ofile_name)
 {
-    unsigned int i, size;
-    unsigned char elements;
+    uint_fast32_t i, size;
+    uint_fast8_t elements;
     struct heap_t *heap = NULL;
     struct node_t *tree = NULL;
     FILE* ifile = file_open(ifile_name, "rb");
@@ -24,13 +24,15 @@ int extract(char *ifile_name, char *ofile_name)
         return 1;
     }
 
-    fread(&elements, sizeof(char), 1, ifile);
+    fread(&elements, sizeof(elements), 1, ifile);
 
     heap = heap_init(N_ALPHA);
 
-    for (i = 0; i < ((elements == 0) ? 256 : elements); i++) {
-        unsigned char c;
-        unsigned int frequency;
+    size = ((elements == 0) ? 256 : elements);
+
+    for (i = 0; i < size; i++) {
+        uint_fast8_t c;
+        uint_fast32_t frequency;
 
         fread(&c, 1, sizeof(c), ifile);
         fread(&frequency, 1, sizeof(frequency), ifile);
@@ -53,10 +55,10 @@ int extract(char *ifile_name, char *ofile_name)
 
 int compress(char *ifile_name, char *ofile_name)
 {
-    unsigned char elements;
-    unsigned int i, n, size;
-    unsigned char buffer[N];
-    unsigned int alphabet[N_ALPHA] = {0};
+    uint_fast8_t elements;
+    uint_fast32_t i, n, size;
+    uint_fast8_t buffer[N];
+    uint_fast32_t alphabet[N_ALPHA] = {0};
     struct heap_t *heap = NULL;
     struct node_t *tree = NULL;
     struct cell_t *table = NULL;
@@ -77,7 +79,7 @@ int compress(char *ifile_name, char *ofile_name)
 
     while ((n = fread(buffer, 1, N, ifile))) {
         for (i = 0; i < n; i++) {
-            alphabet[(unsigned int)buffer[i]]++;
+            alphabet[(uint_fast8_t)buffer[i]]++;
         }
     }
 
@@ -87,15 +89,15 @@ int compress(char *ifile_name, char *ofile_name)
     }
 
     heap = heap_init(N_ALPHA);
-    fwrite(&elements, sizeof(unsigned char), 1, ofile);
+    fwrite(&elements, sizeof(elements), 1, ofile);
 
     for (i = 0; i < N_ALPHA; i++) {
         if (alphabet[i] != 0) {
             struct node_t *node_new = create_node(i, alphabet[i], 1);
             heap_push(heap, node_new);
 
-            fwrite(&i, sizeof(unsigned char), 1, ofile);
-            fwrite(&alphabet[i], sizeof(unsigned int), 1, ofile);
+            fwrite(&i, sizeof(uint8_t), 1, ofile);
+            fwrite(&alphabet[i], sizeof(*alphabet), 1, ofile);
         }
     }
 
@@ -115,39 +117,57 @@ int compress(char *ifile_name, char *ofile_name)
 
 int encode(struct cell_t *table, FILE *ifile, FILE *ofile)
 {
-    unsigned int ii, io, ji, jo, k, n;
-    unsigned char ibuffer[N];
-    unsigned char obuffer[N];
+    uint_fast32_t ii, io, ji, k, n;
+    uint_fast64_t length;
+    uint8_t jo, left;
+    uint_fast8_t ibuffer[N];
+    uint_fast64_t obuffer[N];
+    register uint_fast64_t curr_sym, curr_code;
 
     rewind(ifile);
 
     io = 0;
-    jo = 0;
-
-    while ((n = fread(ibuffer, 1, N, ifile))) {
+    jo = 64;
+    curr_sym = 0;
+ 
+    while ((n = fread(ibuffer, sizeof(*ibuffer), N, ifile))) {
         for (ii = 0; ii < n; ii++) {
+            ji = 0;
             k = ibuffer[ii];
-            for (ji = 0; ji < table[k].length; ji++) {
-                obuffer[io] = (obuffer[io] << 1) | table[k].code[ji];
-                jo++;
-                if (jo == 8) {
+            length = table[k].length;
+            curr_code = table[k].code;
+            left = length;
+            while (ji < length) {
+                if (length > jo) {
+                    curr_sym <<= jo;
+                    left -= jo;
+                    curr_sym |= (curr_code >> left);
+                    obuffer[io] = curr_sym;
+                    curr_sym = 0;
+                    ji = jo;
+                    jo = 64;
                     io++;
-                    jo = 0;
-                    if (io == N) {
-                        fwrite(obuffer, sizeof(unsigned char), N, ofile);
-                        io = 0;
-                    }
+                }
+                else {
+                    curr_sym <<= left;
+                    curr_sym |= ((curr_code << (63 - left)) >> (63 - left));
+                    jo -= left;
+                    ji = length;
+                }
+                if (io == N) {
+                    fwrite(obuffer, sizeof(*obuffer), N, ofile);
+                    io = 0;
                 }
             }
         }
     }
-
-    if (io != 0) {
-        if (jo > 0) {
-            obuffer[io] = obuffer[io] << (8 - jo);
+ 
+    if (io != 0 || jo != 64) {
+        if (jo != 64) {
+            obuffer[io] = curr_sym << jo;
             io++;
         }
-        fwrite(obuffer, sizeof(unsigned char), io, ofile);
+        fwrite(obuffer, sizeof(*obuffer), io, ofile);
     }
 
     return 0;
@@ -155,23 +175,23 @@ int encode(struct cell_t *table, FILE *ifile, FILE *ofile)
 
 int decode(struct node_t *node, FILE *ifile, FILE *ofile)
 {
-    unsigned int ii, io, ji, n;
-    unsigned long int elements;
-    unsigned char ibuffer[N];
-    unsigned char obuffer[N];
+    uint_fast64_t ii, io, ji, n, c;
+    uint_fast64_t elements;
+    uint_fast64_t ibuffer[N];
+    uint_fast8_t obuffer[N];
     struct node_t *leaf = node;
 
     io = 0;
     elements = 0;
 
-    while ((n = fread(ibuffer, 1, N, ifile))) {
+    while ((n = fread(ibuffer, sizeof(*ibuffer), N, ifile))) {
         for (ii = 0; ii < n; ii++) {
-            for (ji = 8; ji >= 1; ji--) {
-                unsigned char c = ibuffer[ii];
-                if ((c >> (ji - 1)) & 1) {
+            c = ibuffer[ii];
+            for (ji = 64; ji >= 1; ji--) {
+                if (((c >> (ji - 1)) & 1) && !leaf->is_leaf) {
                     leaf = leaf->right;
                 }
-                else {
+                else if (!leaf->is_leaf) {
                     leaf = leaf->left;
                 }
                 if (leaf->is_leaf) {
@@ -184,7 +204,7 @@ int decode(struct node_t *node, FILE *ifile, FILE *ofile)
                     elements++;
                     leaf = node;
                     if (io == N) {
-                        fwrite(obuffer, sizeof(char), N, ofile);
+                        fwrite(obuffer, sizeof(*obuffer), N, ofile);
                         io = 0;
                     }
                 }
@@ -196,7 +216,7 @@ int decode(struct node_t *node, FILE *ifile, FILE *ofile)
     }
 
     if (io != 0) {
-        fwrite(obuffer, sizeof(char), io, ofile);
+        fwrite(obuffer, sizeof(*obuffer), io, ofile);
     }
 
     return 0;
