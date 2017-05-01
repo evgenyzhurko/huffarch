@@ -1,5 +1,25 @@
+/**
+    @file binary_tree.c
+
+    @author Evgeny Zhurko
+    @copyright Copyright (c) 2016, Evgeny Zhurko.
+    @license This file is released under the MIT Licesne.
+*/
+
 #include "binary_tree.h"
 
+/**
+ @brief Print binary tree
+
+ This function print binary tree.
+ Root node will be printed first.
+ Then will be printed left subtree with all elements.
+ And after left subtree will be printed right subtree
+ with all elements.
+
+ @param[in] node Root of the binary tree
+ @return Execution status
+*/
 int tree_print(struct node_t *node)
 {
     if (node == NULL) {
@@ -19,6 +39,14 @@ int tree_print(struct node_t *node)
     return 0;
 }
 
+/**
+ @brief Delete binary tree
+
+ This function delete binary tree with all elements.
+
+ @param[in] node Root of the binary tree
+ @return Execution status
+*/
 int tree_delete(struct node_t *node)
 {
     if (node == NULL) {
@@ -32,6 +60,16 @@ int tree_delete(struct node_t *node)
     return 0;
 }
 
+/**
+ @brief Create new node with given parameters
+
+ This function construct new node for tree with given parameters.
+
+ @param[in] c Define character for this node
+ @param[in] frequency Define frequency for character
+ @param[in] is_leaf Define is leaf or intermediate node
+ @return New node
+*/
 struct node_t *create_node(unsigned char c, unsigned int frequency, unsigned int is_leaf)
 {
     struct pair_t *pair_new;
@@ -54,6 +92,16 @@ struct node_t *create_node(unsigned char c, unsigned int frequency, unsigned int
     return node_new;
 }
 
+/**
+ @brief Merge two tree into one tree 
+
+ Create new tree from two tree.
+ One of the tree will be left subtree, the other will be right subtree.
+
+ @param[in] left Left tree
+ @param[in] right Right tree
+ @return New tree
+*/
 struct node_t *merge_tree(struct node_t *left, struct node_t *right)
 {
     struct node_t *node_new = NULL;
@@ -69,7 +117,16 @@ struct node_t *merge_tree(struct node_t *left, struct node_t *right)
     return node_new;
 }
 
+/**
+ @brief Find node by character
 
+ This function find charater in tree.
+ If character isn't find function return NULL.
+
+ @param[in] node Root node
+ @param[in] c Character to find in tree
+ @return node Lead that contain this character or NULL(if not find)
+*/
 struct node_t *find_node(struct node_t *node, unsigned char c)
 {
     if (node == NULL) {

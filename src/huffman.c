@@ -1,7 +1,22 @@
+/**
+    @file huffman.c
+
+    @author Evgeny Zhurko
+    @copyright Copyright (c) 2016, Evgeny Zhurko.
+    @license This file is released under the MIT Licesne.
+*/
+
 #pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
 
 #include "huffman.h"
 
+/**
+ @brief Extract data from compressed file.
+
+ @param[in] ifile_name Input filename
+ @param[in] ofile_name Output filename
+ @return Execution status
+*/
 int extract(char *ifile_name, char *ofile_name)
 {
     uint_fast32_t i, size;
@@ -53,6 +68,13 @@ int extract(char *ifile_name, char *ofile_name)
     return 0;
 }
 
+/**
+ @brief Compress data from compressed file.
+
+ @param[in] ifile_name Input filename
+ @param[in] ofile_name Output filename
+ @return Execution status
+*/
 int compress(char *ifile_name, char *ofile_name)
 {
     uint_fast8_t elements;
@@ -115,6 +137,17 @@ int compress(char *ifile_name, char *ofile_name)
     return 0;
 }
 
+/**
+ @brief Encode file by coding table.
+
+ This function encode input file by coding table
+ and insert all data to output file.
+
+ @param[in] table Coding table
+ @param[in] ifile_name Input filename
+ @param[in] ofile_name Output filename
+ @return Execution status
+*/
 int encode(struct cell_t *table, FILE *ifile, FILE *ofile)
 {
     uint_fast32_t ii, io, ji, k, n;
@@ -122,7 +155,7 @@ int encode(struct cell_t *table, FILE *ifile, FILE *ofile)
     uint8_t jo, left;
     uint_fast8_t ibuffer[N];
     uint_fast64_t obuffer[N];
-    register uint_fast64_t curr_sym, curr_code;
+    uint_fast64_t curr_sym, curr_code;
 
     rewind(ifile);
 
@@ -150,7 +183,7 @@ int encode(struct cell_t *table, FILE *ifile, FILE *ofile)
                 }
                 else {
                     curr_sym <<= left;
-                    curr_sym |= ((curr_code << (63 - left)) >> (63 - left));
+                    curr_sym |= ((curr_code << (63 - left)) >> (63 - left)); // UINT64_MAX >> left << left INVERS & currcode
                     jo -= left;
                     ji = length;
                 }
@@ -173,6 +206,17 @@ int encode(struct cell_t *table, FILE *ifile, FILE *ofile)
     return 0;
 }
 
+/**
+ @brief Dencode file by constructed binary tree.
+
+ This function encode input file by constructed binary tree
+ and insert all data to output file.
+
+ @param[in] node Root of the binary tree
+ @param[in] ifile_name Input filename
+ @param[in] ofile_name Output filename
+ @return Execution status
+*/
 int decode(struct node_t *node, FILE *ifile, FILE *ofile)
 {
     uint_fast64_t ii, io, ji, n, c;
@@ -184,14 +228,19 @@ int decode(struct node_t *node, FILE *ifile, FILE *ofile)
     io = 0;
     elements = 0;
 
+    if (node->is_leaf) {
+        decode_specific(node, ofile);
+        return 0;
+    }
+
     while ((n = fread(ibuffer, sizeof(*ibuffer), N, ifile))) {
         for (ii = 0; ii < n; ii++) {
             c = ibuffer[ii];
             for (ji = 64; ji >= 1; ji--) {
-                if (((c >> (ji - 1)) & 1) && !leaf->is_leaf) {
+                if (((c >> (ji - 1)) & 1)) {
                     leaf = leaf->right;
                 }
-                else if (!leaf->is_leaf) {
+                else {
                     leaf = leaf->left;
                 }
                 if (leaf->is_leaf) {
@@ -217,6 +266,30 @@ int decode(struct node_t *node, FILE *ifile, FILE *ofile)
 
     if (io != 0) {
         fwrite(obuffer, sizeof(*obuffer), io, ofile);
+    }
+
+    return 0;
+}
+
+/**
+ @brief Dencode specific file
+
+ This function decode file that contain same characters.
+
+ @param[in] node Root of the binary tree
+ @param[in] ofile_name Output filename
+ @return Execution status
+*/
+int decode_specific(struct node_t *node, FILE *ofile) {
+    uint_fast8_t obuffer[N];
+    uint_fast32_t current_write = 0;
+    uint_fast64_t count_write = node->element->frequency;
+
+    while (count_write) {
+        current_write = (count_write > N) ? N : count_write;
+        count_write -= current_write;
+        memset(obuffer, node->element->c, current_write);
+        fwrite(obuffer, sizeof(*obuffer), current_write, ofile);
     }
 
     return 0;

@@ -1,7 +1,24 @@
+/**
+    @file option.c
+
+    @author Evgeny Zhurko
+    @copyright Copyright (c) 2016, Evgeny Zhurko.
+    @license This file is released under the MIT Licesne.
+*/
+
 #pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
 
 #include "option.h"
 
+/**
+ @brief Check command line argument
+
+ Check arguments for getopt params.
+
+ @param[in] index Position of current parameter
+ @param[in] out_index End status
+ @return Execution status
+*/
 int check_arguments(int index, int out_index)
 {
     if (out_index != 0)
@@ -17,6 +34,15 @@ int check_arguments(int index, int out_index)
     return 0;
 }
 
+/**
+ @brief Handle command line arguments.
+
+ Check and handle getopt parameters.
+
+ @param[in] argc Number of arguments
+ @param[in] argv Array of arguments
+ @return Execution status
+*/
 int handle_params(int argc, char *argv[])
 {
     int c;

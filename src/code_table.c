@@ -1,5 +1,23 @@
+/**
+    @file code_table.c
+
+    @author Evgeny Zhurko
+    @copyright Copyright (c) 2016, Evgeny Zhurko.
+    @license This file is released under the MIT Licesne.
+*/
+
 #include "code_table.h"
 
+/**
+ @brief Construct coding table from binary tree.
+
+ This function generate coding table from binary tree.
+ Also, this function generate code for each character,
+ based on depth search.
+
+ @param[in] node Root of the binary tree.
+ @return Array of cells - coding table.
+*/
 struct cell_t *table_from_tree(struct node_t *node)
 {
     uint_fast16_t i, j;
@@ -48,12 +66,28 @@ struct cell_t *table_from_tree(struct node_t *node)
     return table;
 }
 
+/**
+ @brief Delete table and free memory for it.
+
+ This function delete all cells in table with all content.
+
+ @param[in] node Root of the binary tree.
+ @return Execution status.
+*/
 int table_delete(struct cell_t *table)
 {
     FREE_PTR(table);
     return 0;
 }
 
+/**
+ @brief Print table.
+
+ This fucntion print all cells in table.
+
+ @param[in] table Coding table.
+ @return Execution status.
+*/
 int table_print(struct cell_t *table)
 {
     uint_fast32_t i;
@@ -67,6 +101,15 @@ int table_print(struct cell_t *table)
     return 0;
 }
 
+/**
+ @brief Length of table.
+
+ This fucntion define size of encoded file.
+ Results gets by sum of code for all character in table.
+
+ @param[in] table Coding table.
+ @return length of table.
+*/
 uint_fast64_t table_result(struct cell_t *table)
 {
     uint_fast32_t i;

@@ -1,7 +1,24 @@
+/**
+    @file heap.c
+
+    @author Evgeny Zhurko
+    @copyright Copyright (c) 2016, Evgeny Zhurko.
+    @license This file is released under the MIT Licesne.
+*/
+
 #include "heap.h"
 
 #include <stdio.h>
 
+/**
+ @brief Get minimal element from heap.
+
+ This function return element.
+ Minimal elements alsways contains in end of heap.
+
+ @param[in] heap Heap
+ @return Minimal element
+*/
 struct node_t *heap_min(struct heap_t *heap)
 {
     IS_NULL(heap);
@@ -9,6 +26,14 @@ struct node_t *heap_min(struct heap_t *heap)
     return heap->alphabet[heap->count];
 }
 
+/**
+ @brief Initialize heap
+
+ This fucntion construct heap for given size.
+
+ @param[in] size Size of desired heap.
+ @return Heap
+*/
 struct heap_t *heap_init(unsigned int size)
 {
     struct heap_t *heap;
@@ -28,6 +53,16 @@ struct heap_t *heap_init(unsigned int size)
     return heap;
 }
 
+/**
+ @brief Push one element into heap
+
+ This function add given element into heap.
+ It defines place for this element based on frequence of element.
+
+ @param[in] heap Heap
+ @param[in] node Element to insert
+ @return Execution status
+*/
 int heap_push(struct heap_t *heap, struct node_t *node)
 {
     int i;
@@ -57,6 +92,14 @@ int heap_push(struct heap_t *heap, struct node_t *node)
     return 0;
 }
 
+/**
+ @brief Delete heap
+
+ This function delete heap with all content.
+
+ @param[in] heap Heap
+ @return Execution status
+*/
 int heap_delete(struct heap_t *heap)
 {
     IS_NULL(heap);
@@ -65,6 +108,14 @@ int heap_delete(struct heap_t *heap)
     return 0;
 }
 
+/**
+ @brief Print heap
+
+ This function print full content of heap o console line.
+
+ @param[in] heap Heap
+ @return Execution status
+*/
 int heap_print(struct heap_t *heap)
 {
     int i;
@@ -75,6 +126,15 @@ int heap_print(struct heap_t *heap)
     return 0;
 }
 
+/**
+ @brief Construct tree from heap.
+
+ This function create heap from tree.
+ It's places all elements based on frequency.
+
+ @param[in] heap Heap
+ @return Root of binary tree
+*/
 struct node_t *tree_from_heap(struct heap_t *heap)
 {
     struct node_t *left = NULL;

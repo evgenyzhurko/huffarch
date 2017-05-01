@@ -1,4 +1,4 @@
-C_FLAGS = -c -Wall -pedantic -Werror -std=c99
+C_FLAGS = -c -Wall -pedantic -Werror -std=c99 -flto
 TMP_DIR = out
 CODE_DIR = src
 OUTPUT_NAME = huff
