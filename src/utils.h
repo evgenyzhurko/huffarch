@@ -1,3 +1,11 @@
+/**
+    @file utils.h
+
+    @author Evgeny Zhurko
+    @copyright Copyright (c) 2016, Evgeny Zhurko.
+    @license This file is released under the MIT Licesne.
+*/
+
 #pragma once
 
 #include <stdio.h>
@@ -5,7 +13,7 @@
 
 #include "message.h"
 
-#define N 4096
+#define N 2048
 #define N_ALPHA 256
 
 int file_size(FILE *);

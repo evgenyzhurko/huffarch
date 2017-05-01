@@ -1,13 +1,28 @@
+/**
+    @file heap.h
+
+    @author Evgeny Zhurko
+    @copyright Copyright (c) 2016, Evgeny Zhurko.
+    @license This file is released under the MIT Licesne.
+*/
+
 #pragma once 
 
 #include "utils.h"
 #include "message.h"
 #include "binary_tree.h"
 
+/**
+ * This struct defines priority heap that contain
+ */
 struct heap_t {
-    int size;
-    int count;
-    struct node_t **alphabet;
+    /*@{*/
+    int size; /**< max size f heap */
+    int count; /**< current size of heap */
+    /*@}*/
+    /*@{*/
+    struct node_t **alphabet; /**< element of heap */
+    /*@{*/
 };
 
 struct node_t *heap_min(struct heap_t *);
