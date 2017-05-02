@@ -20,7 +20,7 @@
  @param[in] node Root of the binary tree
  @return Execution status
 */
-int tree_print(struct node_t *node)
+int tree_print(node_t *node)
 {
     if (node == NULL) {
         return 1;
@@ -47,7 +47,7 @@ int tree_print(struct node_t *node)
  @param[in] node Root of the binary tree
  @return Execution status
 */
-int tree_delete(struct node_t *node)
+int tree_delete(node_t *node)
 {
     if (node == NULL) {
         return 1;
@@ -63,17 +63,17 @@ int tree_delete(struct node_t *node)
 /**
  @brief Create new node with given parameters
 
- This function construct new node for tree with given parameters.
+ This function connew node for tree with given parameters.
 
  @param[in] c Define character for this node
  @param[in] frequency Define frequency for character
  @param[in] is_leaf Define is leaf or intermediate node
  @return New node
 */
-struct node_t *create_node(unsigned char c, unsigned int frequency, unsigned int is_leaf)
+node_t *create_node(unsigned char c, unsigned int frequency, unsigned int is_leaf)
 {
-    struct pair_t *pair_new;
-    struct node_t *node_new;
+    pair_t *pair_new;
+    node_t *node_new;
 
     pair_new = malloc(sizeof(*pair_new));
     node_new = malloc(sizeof(*node_new));
@@ -102,9 +102,9 @@ struct node_t *create_node(unsigned char c, unsigned int frequency, unsigned int
  @param[in] right Right tree
  @return New tree
 */
-struct node_t *merge_tree(struct node_t *left, struct node_t *right)
+node_t *merge_tree(node_t *left, node_t *right)
 {
-    struct node_t *node_new = NULL;
+    node_t *node_new = NULL;
 
     node_new = create_node(0, 0, 0);
 
@@ -127,7 +127,7 @@ struct node_t *merge_tree(struct node_t *left, struct node_t *right)
  @param[in] c Character to find in tree
  @return node Lead that contain this character or NULL(if not find)
 */
-struct node_t *find_node(struct node_t *node, unsigned char c)
+node_t *find_node(node_t *node, unsigned char c)
 {
     if (node == NULL) {
         return NULL;
@@ -140,8 +140,8 @@ struct node_t *find_node(struct node_t *node, unsigned char c)
         return NULL;
     }
     else {
-        struct node_t *left = find_node(node->left, c);
-        struct node_t *right = find_node(node->right, c);
+        node_t *left = find_node(node->left, c);
+        node_t *right = find_node(node->right, c);
 
         if (left != NULL) {
             return left;

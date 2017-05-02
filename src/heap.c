@@ -19,7 +19,7 @@
  @param[in] heap Heap
  @return Minimal element
 */
-struct node_t *heap_min(struct heap_t *heap)
+node_t *heap_min(heap_t *heap)
 {
     IS_NULL(heap);
     heap->count--;
@@ -34,9 +34,9 @@ struct node_t *heap_min(struct heap_t *heap)
  @param[in] size Size of desired heap.
  @return Heap
 */
-struct heap_t *heap_init(unsigned int size)
+heap_t *heap_init(unsigned int size)
 {
-    struct heap_t *heap;
+    heap_t *heap;
     if (size == 0) {
         PRINT_ERROR(HEAP_ZERO_SIZE);
         return NULL;
@@ -63,7 +63,7 @@ struct heap_t *heap_init(unsigned int size)
  @param[in] node Element to insert
  @return Execution status
 */
-int heap_push(struct heap_t *heap, struct node_t *node)
+int heap_push(heap_t *heap, node_t *node)
 {
     int i;
     int inserted = 0;
@@ -100,7 +100,7 @@ int heap_push(struct heap_t *heap, struct node_t *node)
  @param[in] heap Heap
  @return Execution status
 */
-int heap_delete(struct heap_t *heap)
+int heap_delete(heap_t *heap)
 {
     IS_NULL(heap);
     FREE_PTR(heap->alphabet);
@@ -116,7 +116,7 @@ int heap_delete(struct heap_t *heap)
  @param[in] heap Heap
  @return Execution status
 */
-int heap_print(struct heap_t *heap)
+int heap_print(heap_t *heap)
 {
     int i;
     for (i = 0; i < heap->count; i++) {
@@ -127,7 +127,7 @@ int heap_print(struct heap_t *heap)
 }
 
 /**
- @brief Construct tree from heap.
+ @brief Contree from heap.
 
  This function create heap from tree.
  It's places all elements based on frequency.
@@ -135,11 +135,11 @@ int heap_print(struct heap_t *heap)
  @param[in] heap Heap
  @return Root of binary tree
 */
-struct node_t *tree_from_heap(struct heap_t *heap)
+node_t *tree_from_heap(heap_t *heap)
 {
-    struct node_t *left = NULL;
-    struct node_t *right = NULL;
-    struct node_t *parent = NULL;
+    node_t *left = NULL;
+    node_t *right = NULL;
+    node_t *parent = NULL;
 
     IS_NULL(heap);
 

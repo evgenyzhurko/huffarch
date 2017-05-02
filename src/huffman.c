@@ -21,8 +21,8 @@ int extract(char *ifile_name, char *ofile_name)
 {
     uint_fast32_t i, size;
     uint_fast8_t elements;
-    struct heap_t *heap = NULL;
-    struct node_t *tree = NULL;
+    heap_t *heap = NULL;
+    node_t *tree = NULL;
     FILE* ifile = file_open(ifile_name, "rb");
     FILE* ofile = file_open(ofile_name, "wb");
 
@@ -52,7 +52,7 @@ int extract(char *ifile_name, char *ofile_name)
         fread(&c, 1, sizeof(c), ifile);
         fread(&frequency, 1, sizeof(frequency), ifile);
 
-        struct node_t *node_new = create_node(c, frequency, 1);
+        node_t *node_new = create_node(c, frequency, 1);
 
         heap_push(heap, node_new);
     }
@@ -81,9 +81,9 @@ int compress(char *ifile_name, char *ofile_name)
     uint_fast32_t i, n, size;
     uint_fast8_t buffer[N];
     uint_fast32_t alphabet[N_ALPHA] = {0};
-    struct heap_t *heap = NULL;
-    struct node_t *tree = NULL;
-    struct cell_t *table = NULL;
+    heap_t *heap = NULL;
+    node_t *tree = NULL;
+    cell_t *table = NULL;
     FILE* ifile = file_open(ifile_name, "rb");
     FILE* ofile = file_open(ofile_name, "wb");
 
@@ -115,7 +115,7 @@ int compress(char *ifile_name, char *ofile_name)
 
     for (i = 0; i < N_ALPHA; i++) {
         if (alphabet[i] != 0) {
-            struct node_t *node_new = create_node(i, alphabet[i], 1);
+            node_t *node_new = create_node(i, alphabet[i], 1);
             heap_push(heap, node_new);
 
             fwrite(&i, sizeof(uint8_t), 1, ofile);
@@ -148,7 +148,7 @@ int compress(char *ifile_name, char *ofile_name)
  @param[in] ofile_name Output filename
  @return Execution status
 */
-int encode(struct cell_t *table, FILE *ifile, FILE *ofile)
+int encode(cell_t *table, FILE *ifile, FILE *ofile)
 {
     uint_fast32_t ii, io, ji, k, n;
     uint_fast64_t length;
@@ -217,13 +217,13 @@ int encode(struct cell_t *table, FILE *ifile, FILE *ofile)
  @param[in] ofile_name Output filename
  @return Execution status
 */
-int decode(struct node_t *node, FILE *ifile, FILE *ofile)
+int decode(node_t *node, FILE *ifile, FILE *ofile)
 {
     uint_fast64_t ii, io, ji, n, c;
     uint_fast64_t elements;
     uint_fast64_t ibuffer[N];
     uint_fast8_t obuffer[N];
-    struct node_t *leaf = node;
+    node_t *leaf = node;
 
     io = 0;
     elements = 0;
@@ -280,7 +280,7 @@ int decode(struct node_t *node, FILE *ifile, FILE *ofile)
  @param[in] ofile_name Output filename
  @return Execution status
 */
-int decode_specific(struct node_t *node, FILE *ofile) {
+int decode_specific(node_t *node, FILE *ofile) {
     uint_fast8_t obuffer[N];
     uint_fast32_t current_write = 0;
     uint_fast64_t count_write = node->element->frequency;
