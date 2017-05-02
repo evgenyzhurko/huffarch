@@ -13,21 +13,21 @@
 #include "binary_tree.h"
 
 /**
- * This struct defines priority heap that contain
+ * This defines priority heap that contain
  */
-struct heap_t {
+typedef struct {
     /*@{*/
     int size; /**< max size f heap */
     int count; /**< current size of heap */
     /*@}*/
     /*@{*/
-    struct node_t **alphabet; /**< element of heap */
+    node_t **alphabet; /**< element of heap */
     /*@{*/
-};
+} heap_t;
 
-struct node_t *heap_min(struct heap_t *);
-int heap_delete(struct heap_t *);
-int heap_print(struct heap_t *);
-int heap_push(struct heap_t *, struct node_t *);
-struct heap_t *heap_init(unsigned int);
-struct node_t *tree_from_heap(struct heap_t *);
+node_t *heap_min(heap_t *);
+int heap_delete(heap_t *);
+int heap_print(heap_t *);
+int heap_push(heap_t *, node_t *);
+heap_t *heap_init(unsigned int);
+node_t *tree_from_heap(heap_t *);

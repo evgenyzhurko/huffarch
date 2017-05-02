@@ -10,34 +10,36 @@
 
 #include "utils.h"
 
+typedef struct node node_t;
+
 /**
  * This struct defines data structure to contain character 
  * with frequency as one part.
  */
-struct pair_t {
+typedef struct {
     /*@{*/
     unsigned char c; /**< the character */
     unsigned int frequency; /** < frequence for this character*/
     /*@}*/
-};
+} pair_t;
 
 /**
  * Data structure that define node of binary tree.
  */
-struct node_t {
+struct node {
     /*@{*/
     char is_leaf; /**< flag to know is leaf or not*/
     /*@}*/
     /*@{*/
-    struct pair_t *element; /**< character with frequence*/
-    struct node_t *parent; /**< parent node*/
-    struct node_t *left; /**< left node*/
-    struct node_t *right; /**< right node*/
+    pair_t *element; /**< character with frequence*/
+    node_t *parent; /**< parent node*/
+    node_t *left; /**< left node*/
+    node_t *right; /**< right node*/
     /*@{*/
 };
 
-struct node_t *find_node(struct node_t *, unsigned char);
-struct node_t *create_node(unsigned char, unsigned int, unsigned int);
-int tree_print(struct node_t *);
-int tree_delete(struct node_t *);
-struct node_t *merge_tree(struct node_t *, struct node_t *);
+node_t *find_node(node_t *, unsigned char);
+node_t *create_node(unsigned char, unsigned int, unsigned int);
+int tree_print(node_t *);
+int tree_delete(node_t *);
+node_t *merge_tree(node_t *, node_t *);
