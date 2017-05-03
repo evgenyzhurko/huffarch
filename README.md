@@ -9,3 +9,6 @@ Huffman archiver
 # Clean build
 * chmod +x autoclean.sh
 * ./autoclean.sh
+
+# Build documantation
+* doxygen Doxyconfig
