@@ -7,6 +7,7 @@
 */
 
 #pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
+#pragma GCC diagnostic ignored "-Wunused-result"
 
 #include "huffman.h"
 
